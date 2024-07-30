@@ -2,7 +2,7 @@
   <div class="domain">
     <!-- 查询 -->
 
-    <el-form :inline="true" :model="formInline" class="demo-form-inline">
+    <el-form :inline="true"  class="demo-form-inline">
       <!-- 域名输入 -->
       <el-form-item label="域名" class="yumingshuru">
         <el-input
@@ -94,9 +94,11 @@
       </el-table-column>
       <el-table-column prop="createTime" label="创建时间" width="180">
       </el-table-column>
+      <el-table-column prop="price" label="费用" width="180">
+      </el-table-column>
 
-      <el-table-column label="操作" width="80">
-        <!-- 修改域名状态的按钮 -->
+      <!-- <el-table-column label="操作" width="80">
+        //修改域名状态的按钮
         <template slot-scope="scope">
           <el-button
             type="text"
@@ -108,31 +110,36 @@
             编辑
           </el-button>
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
     <!-- 修改的表单 -->
     <el-dialog title="修改操作" :visible.sync="dialogFormVisible">
       <el-form :model="form">
-        <el-form-item label="域名" :label-width="formLabelWidth" >{{
+        <el-form-item label="域名" :label-width="formLabelWidth">{{
           form.domain
         }}</el-form-item>
         <el-form-item label="域名状态" :label-width="formLabelWidth">
           <el-select v-model="form.domainStatus" placeholder="请选择域名状态">
-            <el-option label="正常" value="0"></el-option>
-            <el-option label="锁定" value="1"></el-option>
-            <el-option label="过期" value="2"></el-option>
+            <el-option label="正常" :value="0"></el-option>
+            <el-option label="锁定" :value="1"></el-option>
+            <el-option label="过期" :value="2"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="状态" :label-width="formLabelWidth">
-          <el-select v-model="form.Status" placeholder="请选择状态">
-            <el-option label="闲置" value="0"></el-option>
-            <el-option label="使用中" value="1"></el-option>
+          <el-select v-model="form.status" placeholder="请选择状态">
+            <el-option label="闲置" :value="1"></el-option>
+            <el-option label="使用中" :value="0"></el-option>
           </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false;handleEditConfirm"
+        <el-button
+          type="primary"
+          @click="
+            dialogFormVisible = false;
+            handleEditConfirm();
+          "
           >确 定</el-button
         >
       </div>
@@ -148,19 +155,24 @@ export default {
     return {
       dialogFormVisible: false,
       dialogVisible: false,
-      formInline: {
-        user: "",
-        region: "",
-      },
+     
       list: [],
       searchTerm: "", //查询条件
       filteredUsers: [], //查询结果
       adddomain: "",
       form: {
+        domainId: "",
+        expires: "",
+        createTime: "",
+        userId: "",
         domain: "",
-        Status: "",
+        status: "",
         domainStatus: "",
         updateTime: "",
+        id: "",
+        brand: "",
+        price: "",
+        // userId: "",
       },
       formLabelWidth: "120px",
     };
@@ -182,62 +194,98 @@ export default {
     },
     //  加载数据列表
     load() {
-      axios.get("/data?_sort=id&_order=sesc").then((res) => {
-        this.list = res.data;
-        console.log(this.list);
-      });
+      let requestData = {
+        // 请求参数
+        pageNum: 1,
+        pageSize: 10,
+      };
+      // console.log("加载");
+      axios
+        .post("/domain/domainList", requestData, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+        .then((res) => {
+          // console.log("获取后端数据");
+          this.list = res.data.data.records;
+          console.log(res.data.data.records);
+        });
     },
     // 搜索查询
     clicksearch() {
-      // 清空过滤结果数组
-      this.filteredUsers = [];
-      // 获取搜索条件
-      const searchTerm = this.searchTerm.toLowerCase().trim();
-      // 如果搜索条件为空，直接返回所有数据
-      if (!searchTerm) {
-        this.filteredUsers = this.list;
-        return;
-      }
-      // 根据搜索条件过滤数据
-      this.filteredUsers = this.list.filter((item) => {
-        // 假设数据对象中有一个 domain 属性用于搜索
-        return item.domain.toLowerCase().includes(searchTerm);
-      });
+    // 清空过滤结果数组
+  this.filteredUsers = [];
+
+// 获取搜索条件并进行空值检查
+const searchTerm = this.searchTerm ? this.searchTerm.toLowerCase().trim() : '';
+
+// 如果搜索条件为空，直接返回所有数据
+if (!searchTerm) {
+  this.filteredUsers = this.list;
+  return;
+}
+
+// 根据搜索条件过滤数据
+this.filteredUsers = this.list.filter((item) => {
+  // 假设数据对象中有一个 domain 属性用于搜索
+  const itemDomain = item.domain ? item.domain.toLowerCase() : '';
+
+  return itemDomain.includes(searchTerm);
+});
     },
 
     // 增加数据
     addlist() {
+      let data = {
+        // 请求参数
+        domain: this.adddomain,
+      };
       axios
-        .post("/data", {
-          domain: this.adddomain,
+        .post("/domain/create", data, {
+          headers: {
+            "Content-Type": "application/json",
+          },
         })
         .then((res) => {
-          if (res.status == 201) {
+          if (res.status == 200) {
             this.load();
+            console.log(res.data);
+            // console.log("添加成功");
           }
         })
         .catch((err) => {
           alert("添加失败");
           console.log(err.message);
+          console.log(222);
         });
-      this.adddomain = "";
+      console.log(this.adddomain);
+      // this.adddomain = "";
     },
 
     // 修改数据以及域名状态
     handleEdit(row) {
-      
+      // console.log(row);
+      this.form.brand = row.brand;
+      this.form.createTime = row.createTime;
       this.form.domain = row.domain;
-      this.form.Status = row.Status;
+      this.form.domainId = row.domainId;
       this.form.domainStatus = row.domainStatus;
+      this.form.expires = row.expires;
+      this.form.id = row.id;
+      this.form.price = row.price;
+      this.form.status = row.status;
       this.form.updateTime = new Date();
+      this.form.userId = row.userId;
     },
     // 确认编辑
     handleEditConfirm() {
+      // console.log(res);
       // 发送PUT请求更新数据
       axios
-        .put(`/data/${this.form.id}`, this.form)
+        .post(`/domain/domainList/${this.form.id}`, this.form)
         .then((response) => {
-          console.log("数据更新成功:", response.data);
+          console.log("数据更新成功:", response);
           // 可以根据需要处理成功后的操作，比如重新加载数据列表等
           this.dialogFormVisible = false; // 关闭对话框
           this.load(); // 重新加载数据列表
