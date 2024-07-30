@@ -2,7 +2,7 @@
   <div class="domain">
     <!-- 查询 -->
 
-    <el-form :inline="true"  class="demo-form-inline">
+    <el-form :inline="true" class="demo-form-inline">
       <!-- 域名输入 -->
       <el-form-item label="域名" class="yumingshuru">
         <el-input
@@ -94,8 +94,7 @@
       </el-table-column>
       <el-table-column prop="createTime" label="创建时间" width="180">
       </el-table-column>
-      <el-table-column prop="price" label="费用" width="180">
-      </el-table-column>
+      <el-table-column prop="price" label="费用" width="180"> </el-table-column>
 
       <!-- <el-table-column label="操作" width="80">
         //修改域名状态的按钮
@@ -144,6 +143,8 @@
         >
       </div>
     </el-dialog>
+    <el-pagination background layout="prev, pager, next" :total="total"  @current-change="handleCurrentChange"  >
+    </el-pagination>
   </div>
 </template>
 
@@ -153,9 +154,11 @@ import axios from "@/utils/request";
 export default {
   data() {
     return {
+      total: 0,
+      currentPage:1,
       dialogFormVisible: false,
       dialogVisible: false,
-     
+
       list: [],
       searchTerm: "", //查询条件
       filteredUsers: [], //查询结果
@@ -182,6 +185,12 @@ export default {
   },
 
   methods: {
+     //分页组件
+     handleCurrentChange: function (currentPage) {
+      this.currentPage = currentPage;
+      console.log(this.currentPage); //点击第几页
+      this.load();
+    },
     handleClose(done) {
       this.$confirm("确认关闭？")
         .then(() => {
@@ -196,7 +205,7 @@ export default {
     load() {
       let requestData = {
         // 请求参数
-        pageNum: 1,
+        pageNum: this.currentPage,
         pageSize: 10,
       };
       // console.log("加载");
@@ -209,30 +218,33 @@ export default {
         .then((res) => {
           // console.log("获取后端数据");
           this.list = res.data.data.records;
+          this.total = res.data.data.total;
           console.log(res.data.data.records);
         });
     },
     // 搜索查询
     clicksearch() {
-    // 清空过滤结果数组
-  this.filteredUsers = [];
+      // 清空过滤结果数组
+      this.filteredUsers = [];
 
-// 获取搜索条件并进行空值检查
-const searchTerm = this.searchTerm ? this.searchTerm.toLowerCase().trim() : '';
+      // 获取搜索条件并进行空值检查
+      const searchTerm = this.searchTerm
+        ? this.searchTerm.toLowerCase().trim()
+        : "";
 
-// 如果搜索条件为空，直接返回所有数据
-if (!searchTerm) {
-  this.filteredUsers = this.list;
-  return;
-}
+      // 如果搜索条件为空，直接返回所有数据
+      if (!searchTerm) {
+        this.filteredUsers = this.list;
+        return;
+      }
 
-// 根据搜索条件过滤数据
-this.filteredUsers = this.list.filter((item) => {
-  // 假设数据对象中有一个 domain 属性用于搜索
-  const itemDomain = item.domain ? item.domain.toLowerCase() : '';
+      // 根据搜索条件过滤数据
+      this.filteredUsers = this.list.filter((item) => {
+        // 假设数据对象中有一个 domain 属性用于搜索
+        const itemDomain = item.domain ? item.domain.toLowerCase() : "";
 
-  return itemDomain.includes(searchTerm);
-});
+        return itemDomain.includes(searchTerm);
+      });
     },
 
     // 增加数据
@@ -252,6 +264,7 @@ this.filteredUsers = this.list.filter((item) => {
             this.load();
             console.log(res.data);
             // console.log("添加成功");
+            console.log(JSON.stringify(data));
           }
         })
         .catch((err) => {

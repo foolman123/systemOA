@@ -43,7 +43,7 @@
             >
             <el-menu-item index="2-2"
               ><i class="el-icon-document"></i
-              ><router-link to="/keyword">Tonic管理</router-link></el-menu-item
+              ><router-link to="/tonic">Tonic管理</router-link></el-menu-item
             >
             <el-menu-item index="2-3"
               ><i class="el-icon-document"></i>pixel管理</el-menu-item

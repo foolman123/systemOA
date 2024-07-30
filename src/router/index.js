@@ -10,6 +10,7 @@ const Materral =()=>import('../views/Data analysis/Material-data-analysis.vue')
 const Domain =()=>import('../views/Material management/Domain-name-management.vue')
 const Keyword =()=>import('../views/Material management/Keyword-management.vue')
 const Drop =()=>import('../views/Material management/Drop-link-management.vue')
+const Tonic =()=>import('../views/Material management/Tonic-controller.vue')
 
 Vue.use(VueRouter)
 
@@ -52,6 +53,11 @@ const routes = [
         path:'/drop',
         name:'Drop',
         component:Drop
+      },
+      {
+        path:'/tonic',
+        name:'Tonic',
+        component:Tonic
       },
     ]
   },

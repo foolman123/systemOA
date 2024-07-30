@@ -225,15 +225,25 @@
       <!-- TONIC -->
       <el-tab-pane label="TONIC" name="third">TONIC</el-tab-pane>
     </el-tabs>
+    <el-pagination
+      background
+      layout="prev, pager, next"
+      :total="total"
+      @current-change="handleCurrentChange"
+    >
+    </el-pagination>
   </div>
 </template>
 
 
 <script>
 import axios from "@/utils/request";
+import { v4 as uuidv4 } from "uuid";
 export default {
   data() {
     return {
+      total: 0,
+      currentPage: 1,
       searchTerm: "", //查询条件
       filteredUsers: [], //查询结果
       activeName1: "first",
@@ -242,6 +252,7 @@ export default {
       formInline: {
         user: "",
       },
+      domains: [],
       options: [],
       value: "",
       list: [],
@@ -249,33 +260,38 @@ export default {
         link: "",
         ref_adnetwork: "",
         ref_pubsite: "",
-        ref_keyword: "",
+        ref_keyword: "{{ad.name}}",
         keywords: "",
-        subids: "",
-        subid1: "",
-        subid2: "",
-        subid3: "",
-        click_id: "",
+        subids:
+          '{"subid1":"{{campaign.name}}","subid2":"{{adset.name}}","subid3":"{{campaign.id}}|{{adset.id}}|{{ad.id}}","subid4":"7bcc891c-53bd-4217-8af5-9e07f8f51686"}',
+        subid1: "{{campaign.name}}",
+        subid2: "{{adset.name}}",
+        subid3: "{{campaign.id}}|{{adset.id}}|{{ad.id}}",
+        subid4: "",
+        click_id: "{external_id}",
         s2s_event_id: "search.",
-      },
-      form1: {
-        name: "",
-        platform: "",
-        reclassify: "",
       },
     };
   },
   created() {
     this.load();
+    this.createLink();
   },
   methods: {
+    //分页组件
+    handleCurrentChange: function (currentPage) {
+      this.currentPage = currentPage;
+      console.log(this.currentPage); //点击第几页
+      this.load();
+    },
     //  加载数据列表
     load() {
       let requestData = {
         // 请求参数
-        pageNum: 1,
+        pageNum: this.currentPage,
         pageSize: 10,
       };
+
       // console.log("加载");
       axios
         .post("/ads/urlList", requestData, {
@@ -286,7 +302,8 @@ export default {
         .then((res) => {
           // console.log("获取后端数据");
           this.list = res.data.data.records;
-          console.log(res);
+          this.total = res.data.data.total;
+          // console.log(res.data.data.pages);
         });
     },
     handleClick1(tab, event) {
@@ -323,6 +340,7 @@ export default {
     // 搜索查询
     clicksearch() {
       // 清空过滤结果数组
+      // console.log(this.filteredUsers);
       this.filteredUsers = [];
 
       // 获取搜索条件并进行空值检查
@@ -335,21 +353,28 @@ export default {
         this.filteredUsers = this.list;
         return;
       }
+      console.log("Original list:", this.list);
 
+      // 根据搜索条件过滤数据
       this.filteredUsers = this.list.filter((item) => {
-  // 假设数据对象中有一个 domain 属性用于搜索
-  const itemDomain = item.domain ? item.domain : "";
+        const itemLink = item.link ? item.link.toLowerCase() : "";
+        return itemLink.includes(searchTerm);
+      });
 
-  // 创建不区分大小写的正则表达式对象
-  const regex = new RegExp(searchTerm, "i");
-
-  // 使用正则表达式测试 domain 是否匹配搜索条件
-  return regex.test(itemDomain);
-});
+      console.log("Filtered users:", this.filteredUsers);
     },
 
     //链接生成
     linkGeneration() {
+      // this.form.link = "";
+      this.form.subid4 = uuidv4();
+      if (
+        !this.form.link.startsWith("https://") &&
+        !this.form.link.startsWith("http://")
+      ) {
+        this.form.link = "https://" + this.form.link;
+      }
+      this.form.ref_pubsite = this.form.ref_adnetwork;
       let data = {
         // 请求参数
         link: this.form.link,
@@ -371,12 +396,40 @@ export default {
           if (res.status == 200) {
             this.load();
             console.log(res);
-            // console.log(JSON.stringify(this.form));
+            console.log(JSON.stringify(this.form));
             // console.log("添加成功");
           }
         })
         .catch((err) => {
           alert("添加失败");
+          console.log(err.message);
+          console.log(222);
+        });
+      // console.log(this.adddomain);
+      // this.adddomain = "";
+    },
+    //增加域名接口
+    createLink() {
+      let data = {
+        // 请求参数
+        domains: this.domains,
+      };
+      axios
+        .post("/ads/insertDomain", data, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+        .then((res) => {
+          if (res.status == 200) {
+            this.load();
+            console.log(res);
+            // console.log(JSON.stringify(this.form));
+            console.log("加载成功", data);
+          }
+        })
+        .catch((err) => {
+          alert("加载失败");
           console.log(err.message);
           console.log(222);
         });
@@ -391,7 +444,7 @@ export default {
         .then((res) => {
           if (res.status == 200) {
             this.options = res.data.data;
-            console.log(this.options);
+            // console.log(this.options);
             // console.log(JSON.stringify(this.form));
             console.log("加载成功");
           }
