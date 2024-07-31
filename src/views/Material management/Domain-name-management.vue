@@ -262,7 +262,7 @@ export default {
         .then((res) => {
           if (res.status == 200) {
             this.load();
-            console.log(res.data);
+            console.log(res);
             // console.log("添加成功");
             console.log(JSON.stringify(data));
           }

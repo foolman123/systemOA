@@ -3,7 +3,9 @@
     <el-aside
       class="menu_left"
       width="200px"
-      style="background-color: rgb(238, 241, 246)"
+      style="background-color: rgb(238, 241, 246);position: fixed;"
+      
+
     >
       <p class="houtai">后台管理系统</p>
       <el-menu :default-openeds="['1', '2']">

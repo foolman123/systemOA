@@ -69,92 +69,85 @@
                 style="width: 300px"
               ></el-input>
             </el-form-item>
-            <el-form-item label="ref_keyword">
-              <!-- <span>{{ ad.name }}</span> -->
-              <!-- <el-input
-                v-model="form.ref_keyword"
-                style="width: 300px"
-              ></el-input> -->
-            </el-form-item>
-            <el-form-item label="keywords">
+
+            <el-form-item label="keywords1">
               <el-input
-                v-model="form.keywords"
+                v-model="keywords1"
                 style="width: 300px"
-                type="text"
-                id="keywordsInput"
-                placeholder="空格或逗号隔开"
+                placeholder="请输入关键字"
               ></el-input>
             </el-form-item>
-            <el-form-item label="subid1">
-              <!-- <el-input v-model="form.subids" style="width: 300px"></el-input> -->
-              <!-- <span>{{campaign.name}}</span> -->
+            <el-form-item label="keywords2">
+              <el-input
+                v-model="keywords2"
+                style="width: 300px"
+                placeholder="请输入关键字"
+              ></el-input>
             </el-form-item>
-            <el-form-item label="subid2">
-              <!-- <el-input v-model="form.subids" style="width: 300px"></el-input> -->
-              <!-- <span>{{adset.name}}</span> -->
+            <el-form-item label="keywords3">
+              <el-input
+                v-model="keywords3"
+                style="width: 300px"
+                placeholder="请输入关键字"
+              ></el-input>
             </el-form-item>
-            <el-form-item label="subid3">
-              <!-- <el-input v-model="form.subids" style="width: 300px"></el-input> -->
-              <!-- <span>{{campaign.id}}|{{adset.id}}|{{ad.id}}</span> -->
+            <el-form-item label="keywords4">
+              <el-input
+                v-model="keywords4"
+                style="width: 300px"
+                placeholder="请输入关键字"
+              ></el-input>
             </el-form-item>
-            <el-form-item label="click_id">
-              <!-- <el-input v-model="form.click_id" style="width: 300px"></el-input> -->
-              <!-- <span>{{ external_id }}</span> -->
+            <el-form-item label="keywords5">
+              <el-input
+                v-model="keywords5"
+                style="width: 300px"
+                placeholder="请输入关键字"
+              ></el-input>
             </el-form-item>
+            <el-form-item label="keywords6">
+              <el-input
+                v-model="keywords6"
+                style="width: 300px"
+                placeholder="请输入关键字"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="keywords7">
+              <el-input
+                v-model="keywords7"
+                style="width: 300px"
+                placeholder="请输入关键字"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="keywords8">
+              <el-input
+                v-model="keywords8"
+                style="width: 300px"
+                placeholder="请输入关键字"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="keywords9">
+              <el-input
+                v-model="keywords9"
+                style="width: 300px"
+                placeholder="请输入关键字"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="keywords10">
+              <el-input
+                v-model="keywords10"
+                style="width: 300px"
+                placeholder="请输入关键字"
+              ></el-input>
+            </el-form-item>
+
             <el-form-item label="s2s_event_id">
               <el-input
                 v-model="form.s2s_event_id"
                 style="width: 300px"
               ></el-input>
-            </el-form-item>
-
-            <!-- <el-form-item label="二级分类">
-              <el-select v-model="value" filterable placeholder="请选择">
-                <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                >
-                </el-option>
-              </el-select>
-            </el-form-item> -->
-
-            <el-form-item>
-              <!-- <el-button type="primary" @click="onSubmit1">立即创建</el-button> -->
-              <!-- <el-button>取消</el-button> -->
-            </el-form-item>
-          </el-form></el-tab-pane
-        >
-        <!-- 多链 -->
-        <!-- <el-tab-pane label="多链" name="second"
-          ><div>漏斗信息：</div>
-          <el-form ref="form1" :model="form1" label-width="80px">
-            <el-form-item label="域名地址">
-              <el-input v-model="form1.name" style="width: 300px"></el-input>
-            </el-form-item>
-            <el-select v-model="value" filterable placeholder="请选择">
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              >
-              </el-option>
-            </el-select>
-            <el-form-item label="二级分类">
-              <el-select v-model="form1.reclassify" placeholder="请选择">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
-              </el-select>
-            </el-form-item>
-
-            <el-form-item>
-              <el-button type="primary" @click="onSubmit1">立即创建</el-button> 
-               <el-button>取消</el-button>
-            </el-form-item>
-          </el-form>
-        </el-tab-pane> -->
+            </el-form-item> </el-form
+        ></el-tab-pane>
       </el-tabs>
 
       <span slot="footer" class="dialog-footer">
@@ -196,30 +189,8 @@
           <el-table-column prop="updateTime" label="更新时间" width="180">
           </el-table-column>
           <el-table-column prop="keywords" label="关键字" width="180">
-          </el-table-column>
-          <!-- <el-table-column prop="subids" label="不知道" width="180">
-          </el-table-column> -->
-          <!-- <el-table-column prop="address" label="国家" width="90">
-          </el-table-column>
-          <el-table-column prop="people" label="创建人" width="90">
-          </el-table-column>
-          <el-table-column prop="uptime" label="更新时间" width="120">
-          </el-table-column> -->
-
-          <!-- <el-table-column fixed="right" label="操作" width="240">
-            <template slot-scope="scope">
-              <el-button type="text" size="small"> 详情查看 </el-button>
-              <el-button
-                @click.native.prevent="deleteRow(scope.$index, tableData)"
-                type="text"
-                size="small"
-              >
-                编辑
-              </el-button>
-            </template>
-          </el-table-column> -->
-        </el-table></el-tab-pane
-      >
+          </el-table-column> </el-table
+      ></el-tab-pane>
       <!-- S1 -->
       <el-tab-pane label="S1" name="second">S1</el-tab-pane>
       <!-- TONIC -->
@@ -246,6 +217,7 @@ export default {
       currentPage: 1,
       searchTerm: "", //查询条件
       filteredUsers: [], //查询结果
+      // maxLength: 30, //link显示长度
       activeName1: "first",
       dialogVisible: false,
       activeName: "first",
@@ -256,6 +228,16 @@ export default {
       options: [],
       value: "",
       list: [],
+      keywords1: "",
+      keywords2: "",
+      keywords3: "",
+      keywords4: "",
+      keywords5: "",
+      keywords6: "",
+      keywords7: "",
+      keywords8: "",
+      keywords9: "",
+      keywords10: "",
       form: {
         link: "",
         ref_adnetwork: "",
@@ -273,11 +255,21 @@ export default {
       },
     };
   },
+  computed: {},
   created() {
+    // this.truncatedUrl();
     this.load();
+
     this.createLink();
   },
   methods: {
+    // truncatedUrl() {
+
+    // },
+    // 如果域名太长则用省略号代替
+    truncate(value, maxLength) {
+      return value.substring(0, maxLength) + "...";
+    },
     //分页组件
     handleCurrentChange: function (currentPage) {
       this.currentPage = currentPage;
@@ -302,7 +294,17 @@ export default {
         .then((res) => {
           // console.log("获取后端数据");
           this.list = res.data.data.records;
+
           this.total = res.data.data.total;
+          // 处理数据，根据需要截断文本,link数据长的省略
+          this.list = res.data.data.records.map((item) => ({
+            ...item,
+            link:
+              item.link.length > 40
+                ? item.link.substring(0, 40) + "..."
+                : item.link,
+          }));
+
           // console.log(res.data.data.pages);
         });
     },
@@ -375,6 +377,39 @@ export default {
         this.form.link = "https://" + this.form.link;
       }
       this.form.ref_pubsite = this.form.ref_adnetwork;
+
+      let keywordsArray = [];
+      if (this.keywords1) {
+        keywordsArray.push(this.keywords1);
+      }
+      if (this.keywords2) {
+        keywordsArray.push(this.keywords2);
+      }
+      if (this.keywords3) {
+        keywordsArray.push(this.keywords3);
+      }
+      if (this.keywords4) {
+        keywordsArray.push(this.keywords4);
+      }
+      if (this.keywords5) {
+        keywordsArray.push(this.keywords5);
+      }
+      if (this.keywords6) {
+        keywordsArray.push(this.keywords6);
+      }
+      if (this.keywords7) {
+        keywordsArray.push(this.keywords7);
+      }
+      if (this.keywords8) {
+        keywordsArray.push(this.keywords8);
+      }
+      if (this.keywords9) {
+        keywordsArray.push(this.keywords9);
+      }
+      if (this.keywords10) {
+        keywordsArray.push(this.keywords10);
+      }
+      this.form.keywords = keywordsArray.join(",");
       let data = {
         // 请求参数
         link: this.form.link,
@@ -456,18 +491,8 @@ export default {
         });
     },
 
-    //可以输入十个关键字
-    handleKeywords() {
-      let keywordsInput = document.getElementById("keywordsInput").value.trim();
-      let keywords = keywordsInput.split(/[,\s]+/); // 使用正则表达式来分割逗号或空格
-      // 移除空字符串元素
-      keywords = keywords.filter((keyword) => keyword !== "");
-
-      // 输出到控制台
-      console.log("Entered Keywords:", keywords);
-
-      // 可以在这里进行进一步的处理，比如验证、保存到数据库等操作
-    },
+    //十个关键字整理到keywords
+    handleKeywords() {},
 
     //network是啥pubsite也是啥，填了上面下面自动出现
     getpubsiteClass(pubsite) {
