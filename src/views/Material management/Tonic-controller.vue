@@ -20,7 +20,7 @@
       @click="
         dialogVisible = true;
         // linkGeneration();
-        
+
         getCountry();
         getoffername();
       "
@@ -34,7 +34,7 @@
       :visible.sync="dialogVisible"
       width="64%"
       :before-close="handleClose"
-      ><el-steps :active="1" align-center style="margin-bottom: 36px">
+      ><el-steps :active="currentStep" align-center style="margin-bottom: 36px">
         <el-step title="步骤1" description="请完成增加域名"></el-step>
         <el-step title="步骤2" description="请完成添加像素"></el-step>
         <el-step title="步骤3" description="请完成设置关键字"></el-step>
@@ -42,7 +42,7 @@
       <el-tabs v-model="activeName1" @tab-click="handleClick1">
         <!-- 单链 -->
         <!-- 增加域名 -->
-        <el-tab-pane label="增加域名" name="first">
+        <el-tab-pane label="添加域名" name="tab1">
           <!-- 域名录入表单 -->
           <el-form ref="form" :model="form" label-width="180px">
             <el-form-item label="Name">
@@ -97,10 +97,7 @@
             </el-form-item>
 
             <el-form-item label="Domain">
-              <el-input
-                v-model="form.domain"
-                style="width: 300px"
-              ></el-input>
+              <el-input v-model="form.domain" style="width: 300px"></el-input>
             </el-form-item>
 
             <!-- <el-form-item label="OfferId">
@@ -109,11 +106,20 @@
                 style="width: 300px"
               ></el-input>
             </el-form-item> -->
-          </el-form></el-tab-pane
-        >
+          </el-form>
+
+          <!-- 跳转到下一页 -->
+          <!-- <button @click="goToNextTab();nextStep()">Go to Next Tab</button> -->
+        
+            <el-button @click="dialogVisible = false" style="margin-left: 60%;">取 消</el-button>
+            <el-button type="primary" @click="createCampaign()"
+              >下一步</el-button
+            >
+         
+        </el-tab-pane>
 
         <!-- 设置像素 -->
-        <el-tab-pane label="设置像素" name="second">
+        <el-tab-pane label="添加像素" name="tab2">
           <!-- 域名录入表单 -->
           <el-form ref="form" :model="form" label-width="180px">
             <el-form-item label="link">
@@ -155,11 +161,17 @@
                 v-model="form.s2s_event_id"
                 style="width: 300px"
               ></el-input>
-            </el-form-item> </el-form
-        ></el-tab-pane>
+            </el-form-item> 
+            </el-form
+        >
+        <el-button @click="dialogVisible = false" style="margin-left: 60%;">取 消</el-button>
+            <el-button type="primary" @click="createCampaign()"
+              >下一步</el-button
+            >
+      </el-tab-pane>
 
         <!-- 设置关键字 -->
-        <el-tab-pane label="设置关键字" name="third">
+        <el-tab-pane label="设置关键字" name="tab3">
           <!-- 域名录入表单 -->
           <el-form ref="form" :model="form" label-width="180px">
             <el-form-item label="link">
@@ -205,15 +217,28 @@
                 style="width: 300px"
               ></el-input>
             </el-form-item> </el-form
-        ></el-tab-pane>
+        >
+        <el-button @click="dialogVisible = false" style="margin-left: 60%;">取 消</el-button>
+            <el-button type="primary" @click="
+            dialogVisible = false;
+            createCampaign()
+          "
+              >完成</el-button
+            ></el-tab-pane>
+        
       </el-tabs>
 
-      <span slot="footer" class="dialog-footer">
+      <!-- <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false;createCampaign();"
+        <el-button
+          type="primary"
+          @click="
+            // dialogVisible = false;
+            createCampaign()
+          "
           >添 加</el-button
         >
-      </span>
+      </span> -->
     </el-dialog>
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <!-- ADS -->
@@ -280,7 +305,9 @@ export default {
       currentPage: 1,
       searchTerm: "", //查询条件
       filteredUsers: [], //查询结果
-      activeName1: "first",
+      activeName1: "tab1",
+      tabs: [{ name: "tab1" }, { name: "tab2" }, { name: "tab3" }], //tab跳转
+      currentStep: 1, //进度条加载
       dialogVisible: false,
       activeName: "first",
       formInline: {
@@ -303,9 +330,25 @@ export default {
   },
   created() {
     this.load();
-    this.createLink();
+    // this.createLink();
   },
   methods: {
+    //进度条加载
+    nextStep() {
+      if (this.currentStep < 3) {
+        // 假设总共有三步，索引从0到2
+        this.currentStep++;
+      }
+    },
+    //点击跳转到下一个标签页
+    goToNextTab() {
+      const index = this.tabs.findIndex((tab) => tab.name === this.activeName1);
+
+      if (index !== -1 && index < this.tabs.length - 1) {
+        console.log("函数执行了");
+        this.activeName1 = this.tabs[index + 1].name;
+      }
+    },
     //分页组件
     handleCurrentChange: function (currentPage) {
       this.currentPage = currentPage;
@@ -413,7 +456,7 @@ export default {
         .then((res) => {
           if (res.status == 200) {
             this.offerOptions = res.data.data;
-            console.log(res);
+            // console.log(res);
           }
         })
         .catch((err) => {
@@ -497,14 +540,13 @@ export default {
 
     //添加域名
     createCampaign() {
-      
       let data = {
         // 请求参数
         name: this.form.name,
-        offer:this.form.offer,
-        offerId:this.form.offerId,
-        country:this.form.country,
-        domain:this.form.domain
+        offer: this.form.offer,
+        offerId: this.form.offerId,
+        country: this.form.country,
+        domain: this.form.domain,
       };
       axios
         .get("/tonic/createCampaign", data, {
@@ -515,10 +557,12 @@ export default {
         .then((res) => {
           if (res.status == 200) {
             // this.options = res.data.data;
-            console.log(res);
+            // console.log(res);
             // console.log(data);
-            console.log(JSON.stringify(data));
-            // console.log("加载成功");
+            // console.log(JSON.stringify(data));
+            console.log("加载成功");
+            this.nextStep();
+            this.goToNextTab();
           }
         })
         .catch((err) => {
